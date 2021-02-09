@@ -81,9 +81,9 @@ class App:
             else:
                 fig_loss = go.Figure(data=[
                     go.Scatter(x=df["epoch"], y=df["loss_train"], name="train", mode="lines", marker={"color": "#0000ff"}),
-                    go.Scatter(x=df["epoch"], y=df["loss_train_regularizer"], name="train regularizer", mode="lines", marker={"color": "#bbbbff"}),
+                    go.Scatter(x=df["epoch"], y=df["loss_train_regularizer"], name="train + regularizer", mode="lines", marker={"color": "#bbbbff"}),
                     go.Scatter(x=df["epoch"], y=df["loss_validation"], name="validation", mode="lines", marker={"color": "#ff0000"}),
-                    go.Scatter(x=df["epoch"], y=df["loss_validation_regularizer"], name="validation regularizer", mode="lines", marker={"color": "#ffbbbb"})
+                    go.Scatter(x=df["epoch"], y=df["loss_validation_regularizer"], name="validation + regularizer", mode="lines", marker={"color": "#ffbbbb"})
                 ])
             fig_loss.update_xaxes(title="epoch")
             fig_loss.update_yaxes(title="Loss")

@@ -23,11 +23,11 @@ class AppManager:
 
         self.app.layout = html.Div(children=[
             dcc.Location(id="url", refresh=False),
-            html.H4(id="text-datetime", style={"textAlign": "right"}),
+            html.H5(id="text-datetime", style={"textAlign": "right"}),
             html.Div(id="page-content"),
             dcc.Interval(
                 id="interval-component",
-                interval=10000,
+                interval=30000,
                 n_intervals=0
             )
         ])
@@ -35,6 +35,18 @@ class AppManager:
         if self.config.model.input_dimension == 1 and self.config.model.output_dimension == 1:
             from visualize.app_data import App1D1D
             self.app2 = App1D1D(self.config, self.app)
+        elif self.config.model.input_dimension == 2 and self.config.model.output_dimension == 1:
+            from visualize.app_data import App2D1D
+            self.app2 = App2D1D(self.config, self.app)
+        elif self.config.model.input_dimension == 3 and self.config.model.output_dimension == 1:
+            from visualize.app_data import App3D1D
+            self.app2 = App3D1D(self.config, self.app)
+        elif self.config.model.input_dimension == 2 and self.config.model.output_dimension > 1:
+            from visualize.app_data import App2D2D
+            self.app2 = App2D2D(self.config, self.app)
+        elif self.config.model.input_dimension == 3 and self.config.model.output_dimension > 1:
+            from visualize.app_data import App3D2D
+            self.app2 = App3D2D(self.config, self.app)
            
         self.app1 = App(self.config, self.app)
 

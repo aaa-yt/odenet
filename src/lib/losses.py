@@ -10,6 +10,15 @@ class MeanSquareError:
     def gradient(self, y_pred, y_true):
         return (y_pred - y_true) / len(y_true)
 
+
+class BinaryCrossEntropy:
+    def __call__(self, y_pred, y_true):
+        return -np.mean(y_true * np.log(y_pred) + (1 - y_true) * np.log((1. - y_pred)))
+    
+    def gradient(self, y_pred, y_true):
+        return (((1 - y_true) / (1. - y_pred)) - (y_true / y_pred)) / len(y_true)
+
+
 class CrossEntropy:
     def __call__(self, y_pred, y_true):
         return np.mean(-np.sum(y_true * np.log(y_pred), 1))
@@ -20,6 +29,8 @@ class CrossEntropy:
 def get(loss_type):
     if loss_type.lower() == "crossentropy":
         return CrossEntropy()
+    elif loss_type.lower() == "binarycrossentropy":
+        return BinaryCrossEntropy()
     else:
         return MeanSquareError()
 

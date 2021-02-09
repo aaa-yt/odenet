@@ -63,6 +63,59 @@ class Tanh:
         return self.gain / np.cosh(self.gain * x)
 
 
+class Softplus:
+    def __init__(self):
+        self.function = np.vectorize(self._softplus, otypes=[np.float32])
+        self.d_function = np.vectorize(self._derivative_softplus, otypes=[np.float32])
+    
+    def __call__(self, x):
+        return self.function(x)
+    
+    def derivative(self, x):
+        return self.d_function(x)
+    
+    def _softplus(self, x):
+        return np.log(1. + np.exp(x))
+    
+    def _derivative_softplus(self, x):
+        return 1. / (1. + np.exp(-x))
+
+class Polynomial:
+    def __init__(self, n=2):
+        self.n = n
+        self.function = np.vectorize(self._polynomial, otypes=[np.float32])
+        self.d_function = np.vectorize(self._derivative_polynomial, otypes=[np.float32])
+    
+    def __call__(self, x):
+        return self.function(x)
+    
+    def derivative(self, x):
+        return self.d_function(x)
+    
+    def _polynomial(self, x):
+        return x**self.n
+    
+    def _derivative_polynomial(self, x):
+        return self.n * x**(self.n-1.)
+
+class Gaussian:
+    def __init__(self):
+        self.function = np.vectorize(self._gaussian, otypes=[np.float32])
+        self.d_function = np.vectorize(self._derivative_gaussian, otypes=[np.float32])
+    
+    def __call__(self, x):
+        return self.function(x)
+    
+    def derivative(self, x):
+        return self.d_function(x)
+    
+    def _gaussian(self, x):
+        return np.exp(-x * x / 2.) / np.sqrt(2. * np.pi)
+    
+    def _derivative_gaussian(self, x):
+        return -x * np.sqrt(-x * x / 2.) / np.sqrt(2. * np.pi)
+
+
 def get(function_type):
     if function_type.lower() == "relu":
         relu = ReLU()
@@ -70,6 +123,15 @@ def get(function_type):
     elif function_type.lower() == "tanh":
         tanh = Tanh()
         return tanh, tanh.derivative
+    elif function_type.lower() == "softplus":
+        softplus = Softplus()
+        return softplus, softplus.derivative
+    elif function_type.lower() == "polynomial":
+        polynomial = Polynomial()
+        return polynomial, polynomial.derivative
+    elif function_type.lower() == "gaussian":
+        gaussian = Gaussian()
+        return gaussian, gaussian.derivative
     else:
         sigmoid = Sigmoid()
         return sigmoid, sigmoid.derivative
