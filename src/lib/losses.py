@@ -16,7 +16,7 @@ class BinaryCrossEntropy:
         self.eps = 1e-8
 
     def __call__(self, y_pred, y_true):
-        return -np.mean(y_true * np.log(y_pred) + (1 - y_true) * np.log((1. - y_pred)))
+        return -np.mean(y_true * np.log(y_pred + self.eps) + (1 - y_true) * np.log((1. - y_pred + self.eps)))
     
     def gradient(self, y_pred, y_true):
         return (np.divide(1 - y_true, 1. - y_pred + self.eps) - np.divide(y_true, y_pred+self.eps)) / len(y_true)
@@ -27,7 +27,7 @@ class CrossEntropy:
         self.eps = 1e-8
 
     def __call__(self, y_pred, y_true):
-        return np.mean(-np.sum(y_true * np.log(y_pred), 1))
+        return np.mean(-np.sum(y_true * np.log(y_pred + self.eps), 1))
     
     def gradient(self, y_pred, y_true):
         return -np.divide(y_true, y_pred+self.eps) / len(y_true)
