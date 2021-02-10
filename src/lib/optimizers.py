@@ -98,9 +98,10 @@ class Adam(Optimizer):
         self.eps = 1e-8
     
     def __call__(self, params, g_params):
-        new_params, new_m, new_v = zip(*[(param - self.rate * np.divide((self.decay * m + (1. - self.decay) * g_param) / (1. - self.decay ** self.t), np.sqrt(((self.decay2 * v + (1. - self.decay2) * np.square(g_param)) / (1. - self.decay2))+ self.eps).astype(np.float32)), self.decay * m + (1. - self.decay) * g_param, self.decay2 * v + (1. - self.decay2) * np.square(g_param)) for param, g_param, m, v in zip(params, g_params, self.m, self.v)])
+        new_params, new_m, new_v = zip(*[(param - self.rate * np.divide((self.decay * m + (1. - self.decay) * g_param) / (1. - self.decay ** self.t), np.sqrt(((self.decay2 * v + (1. - self.decay2) * np.square(g_param)) / (1. - self.decay2 ** self.t)) + self.eps).astype(np.float32)), self.decay * m + (1. - self.decay) * g_param, self.decay2 * v + (1. - self.decay2) * np.square(g_param)) for param, g_param, m, v in zip(params, g_params, self.m, self.v)])
         self.m = new_m
         self.v = new_v
+        self.t += 1
         return new_params
 
 
