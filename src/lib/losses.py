@@ -12,19 +12,25 @@ class MeanSquareError:
 
 
 class BinaryCrossEntropy:
+    def __init__(self):
+        self.eps = 1e-8
+
     def __call__(self, y_pred, y_true):
         return -np.mean(y_true * np.log(y_pred) + (1 - y_true) * np.log((1. - y_pred)))
     
     def gradient(self, y_pred, y_true):
-        return (((1 - y_true) / (1. - y_pred)) - (y_true / y_pred)) / len(y_true)
+        return (np.divide(1 - y_true, 1. - y_pred + self.eps) - np.divide(y_true, y_pred+self.eps)) / len(y_true)
 
 
 class CrossEntropy:
+    def __init__(self):
+        self.eps = 1e-8
+
     def __call__(self, y_pred, y_true):
         return np.mean(-np.sum(y_true * np.log(y_pred), 1))
     
     def gradient(self, y_pred, y_true):
-        return -y_true / (y_pred * len(y_true))
+        return -np.divide(y_true, y_pred+self.eps) / len(y_true)
 
 def get(loss_type):
     if loss_type.lower() == "crossentropy":
