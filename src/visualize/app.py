@@ -16,10 +16,8 @@ class App:
     def __init__(self, config: Config, app):
         self.config = config
 
-        self.app = app
-        self.layout = html.Div(children=[
-            html.H1(id="text-epoch", style={"textAlign": "center"}),
-            html.Div(children=[
+        if self.config.trainer.is_accuracy:
+            html_div_learning_curve = html.Div(children=[
                 html.Div(children=[
                     html.H2(children="Loss", style={"textAlign": "center"}),
                     dcc.Graph(
@@ -32,7 +30,19 @@ class App:
                         id="accuracy-graph"
                     )
                 ], id="accuracy", style={"width": "48%", "margin": "10px"})
-            ], id="learning-curve", style={"display": "flex", "justify-content": "center"}),
+            ], id="learning-curve", style={"display": "flex", "justify-content": "center"})
+        else:
+            html_div_learning_curve = html.Div(children=[
+                html.H2(children="Loss", style={"textAlign": "center"}),
+                dcc.Graph(
+                        id="loss-graph"
+                    )
+            ], id="loss", style={"width": "70%", "margin": "10px auto", "justify-content": "center"})
+
+        self.app = app
+        self.layout = html.Div(children=[
+            html.H1(id="text-epoch", style={"textAlign": "center"}),
+            html_div_learning_curve,
             html.Div(children=[
                 html.Div(children=[
                     html.H2(children="Parameters", style={"textAlign": "center"}),
