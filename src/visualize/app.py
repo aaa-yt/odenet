@@ -73,41 +73,66 @@ class App:
             ], id="parameters")
         ])
         
-        @self.app.callback(
-            Output("text-epoch", "children"),
-            Output("loss-graph", "figure"),
-            Output("accuracy-graph", "figure"),
-            Input("interval-component", "n_intervals")
-        )
-        def update_learning_curve(n):
-            df = pd.read_csv(self.config.resource.result_visualize_learning_curve_path)
-            epoch = df["epoch"].values[-1]
-            text = "Epoch: {}".format(epoch)
-            if self.config.trainer.regularizer_type == "None":
-                fig_loss = go.Figure(data=[
-                    go.Scatter(x=df["epoch"], y=df["loss_train"], name="train", mode="lines", marker={"color": "#0000ff"}),
-                    go.Scatter(x=df["epoch"], y=df["loss_validation"], name="validation", mode="lines", marker={"color": "#ff0000"})
-                ])
-            else:
-                fig_loss = go.Figure(data=[
-                    go.Scatter(x=df["epoch"], y=df["loss_train"], name="train", mode="lines", marker={"color": "#0000ff"}),
-                    go.Scatter(x=df["epoch"], y=df["loss_train_regularizer"], name="train + regularizer", mode="lines", marker={"color": "#bbbbff"}),
-                    go.Scatter(x=df["epoch"], y=df["loss_validation"], name="validation", mode="lines", marker={"color": "#ff0000"}),
-                    go.Scatter(x=df["epoch"], y=df["loss_validation_regularizer"], name="validation + regularizer", mode="lines", marker={"color": "#ffbbbb"})
-                ])
-            fig_loss.update_xaxes(title="epoch")
-            fig_loss.update_yaxes(title="Loss")
+        if self.config.trainer.is_accuracy:
+            @self.app.callback(
+                Output("text-epoch", "children"),
+                Output("loss-graph", "figure"),
+                Output("accuracy-graph", "figure"),
+                Input("interval-component", "n_intervals")
+            )
+            def update_learning_curve(n):
+                df = pd.read_csv(self.config.resource.result_visualize_learning_curve_path)
+                epoch = df["epoch"].values[-1]
+                text = "Epoch: {}".format(epoch)
+                if self.config.trainer.regularizer_type == "None":
+                    fig_loss = go.Figure(data=[
+                        go.Scatter(x=df["epoch"], y=df["loss_train"], name="train", mode="lines", marker={"color": "#0000ff"}),
+                        go.Scatter(x=df["epoch"], y=df["loss_validation"], name="validation", mode="lines", marker={"color": "#ff0000"})
+                    ])
+                else:
+                    fig_loss = go.Figure(data=[
+                        go.Scatter(x=df["epoch"], y=df["loss_train"], name="train", mode="lines", marker={"color": "#0000ff"}),
+                        go.Scatter(x=df["epoch"], y=df["loss_train_regularizer"], name="train + regularizer", mode="lines", marker={"color": "#bbbbff"}),
+                        go.Scatter(x=df["epoch"], y=df["loss_validation"], name="validation", mode="lines", marker={"color": "#ff0000"}),
+                        go.Scatter(x=df["epoch"], y=df["loss_validation_regularizer"], name="validation + regularizer", mode="lines", marker={"color": "#ffbbbb"})
+                    ])
+                fig_loss.update_xaxes(title="epoch")
+                fig_loss.update_yaxes(title="Loss")
 
-            if self.config.trainer.is_accuracy:
                 fig_acc = go.Figure(data=[
                     go.Scatter(x=df["epoch"], y=df["accuracy_train"], name="train", mode="lines", marker={"color": "#0000ff"}),
                     go.Scatter(x=df["epoch"], y=df["accuracy_validation"], name="validation", mode="lines", marker={"color": "#ff0000"})
                 ])
                 fig_acc.update_xaxes(title="epoch")
                 fig_acc.update_yaxes(title="Accuracy")
-            else:
-                fig_acc = None
-            return text, fig_loss, fig_acc
+                return text, fig_loss, fig_acc
+        else:
+            @self.app.callback(
+                Output("text-epoch", "children"),
+                Output("loss-graph", "figure"),
+                Input("interval-component", "n_intervals")
+            )
+            def update_loss(n):
+                df = pd.read_csv(self.config.resource.result_visualize_learning_curve_path)
+                epoch = df["epoch"].values[-1]
+                text = "Epoch: {}".format(epoch)
+                if self.config.trainer.regularizer_type == "None":
+                    fig_loss = go.Figure(data=[
+                        go.Scatter(x=df["epoch"], y=df["loss_train"], name="train", mode="lines", marker={"color": "#0000ff"}),
+                        go.Scatter(x=df["epoch"], y=df["loss_validation"], name="validation", mode="lines", marker={"color": "#ff0000"})
+                    ])
+                else:
+                    fig_loss = go.Figure(data=[
+                        go.Scatter(x=df["epoch"], y=df["loss_train"], name="train", mode="lines", marker={"color": "#0000ff"}),
+                        go.Scatter(x=df["epoch"], y=df["loss_train_regularizer"], name="train + regularizer", mode="lines", marker={"color": "#bbbbff"}),
+                        go.Scatter(x=df["epoch"], y=df["loss_validation"], name="validation", mode="lines", marker={"color": "#ff0000"}),
+                        go.Scatter(x=df["epoch"], y=df["loss_validation_regularizer"], name="validation + regularizer", mode="lines", marker={"color": "#ffbbbb"})
+                    ])
+                fig_loss.update_xaxes(title="epoch")
+                fig_loss.update_yaxes(title="Loss")
+                return text, fig_loss
+        
+        
         
         @self.app.callback(
             Output("parameter-all-graph", "figure"),
