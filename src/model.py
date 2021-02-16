@@ -40,9 +40,9 @@ class ODENetModel:
 
         lam = self.solver(func, self.t[::-1], np.dot(loss_grad, self.P), args=(self.params, self.d_function, self.x, self.division))
         z = np.einsum('ikl,ijl->ijk', self.params[1], self.x) + self.params[2][:, np.newaxis, :]
-        gradient_a = np.sum(lam * self.function(z), 1) + params_reg[0]
-        gradient_W = np.einsum('ilj,ilk->ijk', lam * self.params[0][:, np.newaxis, :] * self.d_function(z), self.x) + params_reg[1]
-        gradient_b = np.sum(lam * self.params[0][:, np.newaxis, :] * self.d_function(z), 1) + params_reg[2]
+        gradient_a = np.sum(lam[::-1] * self.function(z), 1) + params_reg[0]
+        gradient_W = np.einsum('ilj,ilk->ijk', lam[::-1] * self.params[0][:, np.newaxis, :] * self.d_function(z), self.x) + params_reg[1]
+        gradient_b = np.sum(lam[::-1] * self.params[0][:, np.newaxis, :] * self.d_function(z), 1) + params_reg[2]
         return (gradient_a, gradient_W, gradient_b)
 
     def load(self, model_path):
