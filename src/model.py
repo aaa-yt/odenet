@@ -36,7 +36,7 @@ class ODENetModel:
     def gradient(self, loss_grad, params_reg):
         def func(t, lam, params, function, x, division):
             index = int(t * (division - 1))
-            return np.dot(lam * params[0][index] * function(np.dot(x[index], params[1][index].T) + params[2][index]), params[1][index])
+            return -np.dot(lam * params[0][index] * function(np.dot(x[index], params[1][index].T) + params[2][index]), params[1][index])
 
         lam = self.solver(func, self.t[::-1], np.dot(loss_grad, self.P), args=(self.params, self.d_function, self.x, self.division))
         z = np.einsum('ikl,ijl->ijk', self.params[1], self.x) + self.params[2][:, np.newaxis, :]
