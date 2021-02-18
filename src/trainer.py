@@ -36,7 +36,7 @@ class Trainer:
     def training(self):
         self.compile_model()
         self.dataset = self.load_dataset()
-        self.fit(x=self.dataset[0][0], y=self.dataset[0][1], epochs=self.config.trainer.epoch, batch_size=self.config.trainer.batch_size, validation_data=self.dataset[1], is_accuracy=self.config.trainer.is_accuracy, save_step=self.config.trainer.save_step)
+        self.fit(x=self.dataset[0][0], y=self.dataset[0][1], epochs=self.config.trainer.epoch, batch_size=self.config.trainer.batch_size, validation_data=self.dataset[1], is_accuracy=self.config.trainer.is_accuracy, save_step=self.config.trainer.save_step, save_point=self.config.trainer.save_point)
         self.evaluate(self.dataset[2][0], self.dataset[2][1])
         self.save_result()
     
@@ -46,7 +46,7 @@ class Trainer:
         self.accuracy = losses.Accuracy(self.config)
         self.regularizer = regularizers.get(self.config)
     
-    def fit(self, x=None, y=None, epochs=1, batch_size=1, validation_data=None, is_shuffle=True, is_accuracy=False, save_step=1):
+    def fit(self, x=None, y=None, epochs=1, batch_size=1, validation_data=None, is_shuffle=True, is_accuracy=False, save_step=1, save_point=[]):
         if x is None or y is None:
             raise ValueError("There is no fitting data.")
         n_train = len(x)
@@ -95,6 +95,8 @@ class Trainer:
             logger.info(message)
             if epoch % save_step == 0:
                 self.save_visualize_data(x=x, y=y, y_pred=y_pred, validation_data=validation_data)
+            if epoch in save_point:
+                self.save_result()
         interval = time.time() - start_time
         logger.info("end of training")
         logger.info("time: {}".format(interval))

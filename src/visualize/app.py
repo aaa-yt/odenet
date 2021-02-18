@@ -147,25 +147,24 @@ class App:
             a = np.array(model.get("a"))
             W = np.array(model.get("W"))
             b = np.array(model.get("b"))
-            N = self.config.model.input_dimension + self.config.model.output_dimension
             t = np.linspace(0., self.config.model.maximum_time, self.config.model.weights_division)
 
             fig_params = go.Figure()
             fig_a = go.Figure()
             fig_W = go.Figure()
             fig_b = go.Figure()
-            colors_a = self.get_colorpalette("Reds", 2 * N)
-            colors_W = self.get_colorpalette("Greens", 2 * N * N)
-            colors_b = self.get_colorpalette("Blues", 2* N)
+            colors_a = self.get_colorpalette("Reds", 2 * len(a[0]))
+            colors_W = self.get_colorpalette("Greens", 2 * len(W[0]) * len(W[0][0]))
+            colors_b = self.get_colorpalette("Blues", 2 * len(b[0]))
 
-            for i in range(N):
+            for i in range(len(a[0])):
                 fig_params.add_trace(go.Scatter(x=t, y=a[:, i], name='a{}(t)'.format(i), mode="lines", marker={'color': colors_a[i]}))
                 fig_a.add_trace(go.Scatter(x=t, y=a[:, i], name='a{}(t)'.format(i), mode="lines", marker={'color': colors_a[i]}))
-            for i in range(N):
-                for j in range(N):
+            for i in range(len(W[0])):
+                for j in range(len(W[0][0])):
                     fig_params.add_trace(go.Scatter(x=t, y=W[:, i, j], name='W{}{}(t)'.format(i, j), mode="lines", marker={'color': colors_W[i * N + j]}))
                     fig_W.add_trace(go.Scatter(x=t, y=W[:, i, j], name='W{}{}(t)'.format(i, j), mode="lines", marker={'color': colors_W[i * N + j ]}))
-            for i in range(N):
+            for i in range(len(b[0])):
                 fig_params.add_trace(go.Scatter(x=t, y=b[:, i], name='b{}(t)'.format(i), mode="lines", marker={'color': colors_b[i]}))
                 fig_b.add_trace(go.Scatter(x=t, y=b[:, i], name='b{}(t)'.format(i), mode="lines", marker={'color': colors_b[i]}))
             fig_params.update_xaxes(title='t')

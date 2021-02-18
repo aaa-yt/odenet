@@ -40,6 +40,7 @@ class Config:
             if config_trainer.get("Batch_size") is not None: self.trainer.batch_size = int(config_trainer.get("Batch_size"))
             if config_trainer.get("Is_accuracy") is not None: self.trainer.is_accuracy = bool(int(config_trainer.get("Is_accuracy")))
             if config_trainer.get("Save_step") is not None: self.trainer.save_step = int(config_trainer.get("Save_step"))
+            if config_trainer.get("Save_point") is not None: self.trainer.save_point = [int(s.strip("[] ")) for s in config_trainer.get("Save_point").split(",")]
     
     def save_parameter(self, config_path):
         logger.debug("save parameter to {}".format(config_path))
@@ -66,7 +67,8 @@ class Config:
             "Epoch": self.trainer.epoch,
             "Batch_size": self.trainer.batch_size,
             "Is_accuracy": self.trainer.is_accuracy,
-            "Save_step": self.trainer.save_step
+            "Save_step": self.trainer.save_step,
+            "Save_point": self.trainer.save_point
         }
         with open(config_path, "wt") as f:
             config_parser.write(f)
@@ -127,3 +129,4 @@ class TrainerConfig:
         self.batch_size = 1
         self.is_accuracy = 0
         self.save_step = 1
+        self.save_point = 1
