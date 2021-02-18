@@ -129,4 +129,4 @@ class TrainerConfig:
         self.batch_size = 1
         self.is_accuracy = 0
         self.save_step = 1
-        self.save_point = 1
+        self.save_point = [1]
