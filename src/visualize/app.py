@@ -162,8 +162,8 @@ class App:
                 fig_a.add_trace(go.Scatter(x=t, y=a[:, i], name='a{}(t)'.format(i), mode="lines", marker={'color': colors_a[i]}))
             for i in range(len(W[0])):
                 for j in range(len(W[0][0])):
-                    fig_params.add_trace(go.Scatter(x=t, y=W[:, i, j], name='W{}{}(t)'.format(i, j), mode="lines", marker={'color': colors_W[i * N + j]}))
-                    fig_W.add_trace(go.Scatter(x=t, y=W[:, i, j], name='W{}{}(t)'.format(i, j), mode="lines", marker={'color': colors_W[i * N + j ]}))
+                    fig_params.add_trace(go.Scatter(x=t, y=W[:, i, j], name='W{}{}(t)'.format(i, j), mode="lines", marker={'color': colors_W[i * len(W[0][0]) + j]}))
+                    fig_W.add_trace(go.Scatter(x=t, y=W[:, i, j], name='W{}{}(t)'.format(i, j), mode="lines", marker={'color': colors_W[i * len(W[0][0]) + j ]}))
             for i in range(len(b[0])):
                 fig_params.add_trace(go.Scatter(x=t, y=b[:, i], name='b{}(t)'.format(i), mode="lines", marker={'color': colors_b[i]}))
                 fig_b.add_trace(go.Scatter(x=t, y=b[:, i], name='b{}(t)'.format(i), mode="lines", marker={'color': colors_b[i]}))
